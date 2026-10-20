@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRAZZO - Agenda de Tarefas</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #eef2f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .mobile-frame {
+      width: 100%;
+      max-width: 360px;
+      height: 680px;
+      background: #ffffff;
+      border-radius: 36px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+      border: 8px solid #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .camera-notch {
+      width: 120px;
+      height: 18px;
+      background: #1a1a1a;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      margin: 0 auto;
+      z-index: 20;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* ================= TELA DE LOGIN ================= */
+    #loginScreen {
+      background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #loginScreen::before {
+      content: '';
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      background: rgba(108, 92, 231, 0.15);
+      border-radius: 50%;
+      top: -40px;
+      right: -50px;
+      filter: blur(40px);
+    }
+
+    #loginScreen::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: rgba(72, 52, 212, 0.12);
+      border-radius: 50%;
+      bottom: -30px;
+      left: -40px;
+      filter: blur(40px);
+    }
+
+    .login-container {
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      z-index: 10;
+    }
+
+    .brand-logo {
+      font-size: 34px;
+      font-weight: 900;
+      color: #4834d4;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    .login-header {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .login-header p {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      padding: 24px 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(108, 92, 231, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #334155;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      background: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #6c5ce7;
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background-color: #6c5ce7;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(108, 92, 231, 0.25);
+      transition: background-color 0.2s;
+    }
+
+    .btn-submit:hover {
+      background-color: #5b4bc4;
+    }
+
+    /* ================= TELA DASHBOARD ================= */
+    .dashboard-bg {
+      background-color: #f8fafc;
+    }
+
+    .header {
+      background-color: #4834d4;
+      color: #ffffff;
+      padding: 16px 20px 12px 20px;
+    }
+
+    .app-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #a29bfe;
+      margin-bottom: 8px;
+    }
+
+    .user-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .greeting {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      background-color: #6c5ce7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* CALENDÁRIO */
+    .calendar-container {
+      background: #4834d4;
+      padding: 0 12px 20px 12px;
+    }
+
+    .calendar-days {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .day-card {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day-card.active {
+      background: #6c5ce7;
+      transform: translateY(-2px);
+    }
+
+    .day-name {
+      font-size: 11px;
+      color: #ffffff;
+      opacity: 0.8;
+      text-transform: uppercase;
+    }
+
+    .day-number {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+
+    .dot-indicator {
+      width: 5px;
+      height: 5px;
+      background: #a29bfe;
+      border-radius: 50%;
+      margin-top: 6px;
+    }
+
+    .day-card.active .dot-indicator {
+      background: #ffffff;
+    }
+
+    .tasks-container {
+      flex: 1;
+      padding: 20px 16px;
+      overflow-y: auto;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-card {
+      background: #ffffff;
+      padding: 14px;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tag {
+      align-self: flex-start;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
+
+    .tag-urgent { background: #fee2e2; color: #dc2626; }
+    .tag-normal { background: #f3f0ff; color: #6c5ce7; }
+
+    .task-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .task-time {
+      font-size: 11px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-frame">
+    <div class="camera-notch"></div>
+
+    <!-- 1. TELA DE LOGIN (CAMPO RA SOMENTE NÚMEROS) -->
+    <div id="loginScreen" class="screen active">
+      <div class="login-container">
+        <div class="login-header">
+          <h1 class="brand-logo">PRAZZO</h1>
+          <p>Gestão de tarefas e prazos acadêmicos</p>
+        </div>
+
+        <div class="login-card">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="ra">Digite o seu RA</label>
+              <input 
+                type="text" 
+                id="ra" 
+                inputmode="numeric" 
+                pattern="[0-9]*" 
+                placeholder="Ex: 12345678" 
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="password">Senha</label>
+              <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-submit">ENTRAR</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. TELA DASHBOARD -->
+    <div id="dashboardScreen" class="screen dashboard-bg">
+      <div class="header">
+        <div class="app-title">PRAZZO</div>
+        <div class="user-info">
+          <span class="greeting">Agenda Acadêmica</span>
+          <div class="avatar" id="btnLogout" title="Clique para Sair">G</div>
+        </div>
+      </div>
+
+      <div class="calendar-container">
+        <div class="calendar-days">
+          <div class="day-card" data-day="Segunda-feira (24)">
+            <span class="day-name">Seg</span>
+            <span class="day-number">24</span>
+          </div>
+          <div class="day-card active" data-day="Terça-feira (25)">
+            <span class="day-name">Ter</span>
+            <span class="day-number">25</span>
+            <div class="dot-indicator"></div>
+          </div>
+          <div class="day-card" data-day="Quarta-feira (26)">
+            <span class="day-name">Qua</span>
+            <span class="day-number">26</span>
+            <div class="dot-indicator"></div>
+          </div>
+          <div class="day-card" data-day="Quinta-feira (27)">
+            <span class="day-name">Qui</span>
+            <span class="day-number">27</span>
+          </div>
+          <div class="day-card" data-day="Sexta-feira (28)">
+            <span class="day-name">Sex</span>
+            <span class="day-number">28</span>
+            <div class="dot-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tasks-container">
+        <div class="section-title">
+          <span id="currentDayTitle">Tarefas de Terça-feira (25)</span>
+          <span style="color: #6c5ce7; font-size: 12px; cursor: pointer;">+ Novo Prazzo</span>
+        </div>
+
+        <div id="taskList">
+          <div class="task-card">
+            <div class="task-details">
+              <span class="tag tag-urgent">Urgente</span>
+              <span class="task-title">Entrega de BD II</span>
+              <span class="task-time">⏰ Até 23:59</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="task-details">
+              <span class="tag tag-normal">Leitura</span>
+              <span class="task-title">Artigo Engenharia de SW</span>
+              <span class="task-time">⏰ Às 19:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const loginScreen = document.getElementById('loginScreen');
+    const dashboardScreen = document.getElementById('dashboardScreen');
+    const btnLogout = document.getElementById('btnLogout');
+    const currentDayTitle = document.getElementById('currentDayTitle');
+    const taskList = document.getElementById('taskList');
+    const raInput = document.getElementById('ra');
+
+    // Filtra automaticamente para impedir que o usuário digite letras ou símbolos
+    raInput.addEventListener('input', function(e) {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    const tasksByDay = {
+      'Segunda-feira (24)': [
+        { tag: 'Concluído', tagClass: 'tag-normal', title: 'Reunião de Grupo', time: '⏰ Realizado às 14:00' }
+      ],
+      'Terça-feira (25)': [
+        { tag: 'Urgente', tagClass: 'tag-urgent', title: 'Entrega de BD II', time: '⏰ Até 23:59' },
+        { tag: 'Leitura', tagClass: 'tag-normal', title: 'Artigo Engenharia de SW', time: '⏰ Às 19:00' }
+      ],
+      'Quarta-feira (26)': [
+        { tag: 'Prova', tagClass: 'tag-urgent', title: 'Prova P1 de Algoritmos', time: '⏰ Às 08:00' }
+      ],
+      'Quinta-feira (27)': [
+        { tag: 'Sem Tarefas', tagClass: 'tag-normal', title: 'Nenhum prazo para hoje', time: '🎉 Aproveite para descansar!' }
+      ],
+      'Sexta-feira (28)': [
+        { tag: 'Trabalho', tagClass: 'tag-normal', title: 'Apresentação de Redes', time: '⏰ Às 20:30' }
+      ]
+    };
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      loginScreen.classList.remove('active');
+      dashboardScreen.classList.add('active');
+    });
+
+    btnLogout.addEventListener('click', function() {
+      dashboardScreen.classList.remove('active');
+      loginScreen.classList.add('active');
+    });
+
+    const dayCards = document.querySelectorAll('.day-card');
+    dayCards.forEach(card => {
+      card.addEventListener('click', () => {
+        dayCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+
+        const selectedDay = card.getAttribute('data-day');
+        currentDayTitle.innerText = `Tarefas de ${selectedDay}`;
+
+        const tasks = tasksByDay[selectedDay] || [];
+        taskList.innerHTML = tasks.map(t => `
+          <div class="task-card">
+            <div class="task-details">
+              <span class="tag ${t.tagClass}">${t.tag}</span>
+              <span class="task-title">${t.title}</span>
+              <span class="task-time">${t.time}</span>
+            </div>
+          </div>
+        `).join('');
+      });
+    });
+  </script>
+
+</body>
+</html>
