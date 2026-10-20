@@ -1,0 +1,77 @@
+# =============================================================
+# PRAZZO - .gitignore (React Native / Expo + Node.js)
+# Baseado no template oficial github/gitignore para React Native
+# =============================================================
+
+# ---- Dependências --------------------------------------------
+node_modules/
+.pnp
+.pnp.js
+yarn-error.log
+
+# ---- Expo ----------------------------------------------------
+.expo/
+.expo-shared/
+dist/
+web-build/
+expo-env.d.ts
+.kotlin/
+*.orig.*
+
+# ---- Build / projetos nativos gerados (expo prebuild) -------
+build/
+/src/app/android/
+/src/app/ios/
+
+# ---- Android -------------------------------------------------
+.gradle/
+local.properties
+*.apk
+*.aab
+*.iml
+captures/
+.cxx/
+
+# ---- iOS / Xcode ---------------------------------------------
+xcuserdata/
+DerivedData/
+*.xcworkspace/xcuserdata/
+Pods/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ---- Chaves de assinatura (NUNCA versionar) -----------------
+*.jks
+*.keystore
+!debug.keystore
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# ---- Variáveis de ambiente (NUNCA versionar segredos) -------
+.env
+.env.local
+.env.*.local
+
+# ---- Testes / cobertura --------------------------------------
+coverage/
+
+# ---- Metro / bundler -----------------------------------------
+.metro-health-check*
+
+# ---- Logs ----------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# ---- Arquivos compactados soltos -----------------------------
+*.zip
+
+# ---- Sistema operacional / editor ----------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.claude/
