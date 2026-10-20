@@ -1,0 +1,39 @@
+# =============================================================
+# PRAZZO - Postgres de desenvolvimento
+#
+#   docker compose up -d --wait   sobe o banco e ESPERA ficar pronto
+#   docker compose down           para o banco (os dados ficam)
+#   docker compose down -v        para e APAGA os dados (recomeca do zero)
+#
+# Depois de subir:  npm run migrate  &&  npm run seed
+# =============================================================
+services:
+  db:
+    # Versao fixada de proposito: sem a tag, cada integrante do grupo poderia
+    # baixar um major diferente e ver comportamentos distintos no mesmo SQL.
+    image: postgres:17-alpine
+    container_name: prazzo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: prazzo
+      POSTGRES_PASSWORD: prazzo
+      POSTGRES_DB: prazzo
+      # Alinha o fuso do banco com o do app. Sem isso o `psql` mostra os
+      # prazos em UTC e a conferencia manual de "Ate 23:59" engana.
+      TZ: America/Sao_Paulo
+      PGTZ: America/Sao_Paulo
+    ports:
+      - "5432:5432"
+    volumes:
+      - prazzo-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # O Postgres aceita conexao alguns segundos depois de o container subir.
+      # Sem este healthcheck, um `npm run migrate` disparado logo apos o
+      # `up -d` falha com ECONNREFUSED. Com ele, `up -d --wait` segura.
+      test: ["CMD-SHELL", "pg_isready -U prazzo -d prazzo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  prazzo-pgdata:
