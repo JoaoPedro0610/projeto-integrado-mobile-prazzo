@@ -8,6 +8,8 @@ tarefas e prazos, enviando lembretes antes de cada entrega.
 
 Projeto Integrado da disciplina de Desenvolvimento Mobile.
 
+> **Status:** em desenvolvimento. Próximo marco: `v0.1.0-alpha` (Baseline Inicial: Estrutura e Configuração).
+
 ## Equipe
 
 | Nome | Papel | GitHub |
