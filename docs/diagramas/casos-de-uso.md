@@ -1,6 +1,15 @@
 # Diagrama de Casos de Uso - PRAZZO
 
-![Diagrama de Casos de Uso](casos-de-uso.svg)
+![Diagrama de Casos de Uso](casos-de-uso.png)
+
+| Arquivo | Para quê |
+| ------- | -------- |
+| `casos-de-uso.zargo` | Projeto do **ArgoUML** (0.35.1). Abra em *Arquivo > Abrir Projeto* e edite à vontade. |
+| `casos-de-uso.png` | Imagem exportada do ArgoUML, para visualizar no GitHub. |
+| `casos-de-uso.svg` | Versão vetorial com o mesmo conteúdo. |
+
+> **Dica:** o ArgoUML 0.35.1 é antigo e roda melhor com o **Java 8**.
+> No Java 17+ ele pode entrar num loop de log (`InterruptedException`) que enche o disco.
 
 ## Atores
 
@@ -32,7 +41,9 @@
 
 **Pré-condição:** UC03 a UC07 exigem que o estudante esteja autenticado (UC02).
 
-## Como desenhar no ArgoUML
+## Como desenhar do zero no ArgoUML
+
+Se preferirem refazer à mão em vez de abrir o `.zargo`:
 
 1. **Arquivo > Novo** e depois **Criar > Novo Diagrama de Casos de Uso**.
 2. Na barra do diagrama, use **Novo Ator** para criar `Estudante` e `Sistema de Notificações`.
